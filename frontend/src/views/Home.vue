@@ -1,0 +1,1036 @@
+<template>
+  <div class="home">
+    <!-- Hero Section -->
+    <section class="hero">
+      <img 
+        :src="heroBannerUrl" 
+        alt="泰田集团产品展示" 
+        class="hero-bg"
+        @load="onHeroLoad"
+      />
+      <div class="hero-overlay"></div>
+      <div class="container hero-container">
+        <div class="hero-content">
+          <h1 class="hero-title">{{ t('home.heroTitle') }}</h1>
+          <p class="hero-subtitle">{{ t('home.heroSubtitle') }}</p>
+          <div class="hero-buttons">
+            <router-link :to="localePath('/products')" class="industrial-button">{{ t('home.viewProducts') }}</router-link>
+            <router-link :to="localePath('/contact')" class="hero-phone-btn">
+              <svg class="phone-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+              </svg>
+              400-826-1128
+            </router-link>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Company Intro -->
+    <section class="company-intro">
+      <div class="container">
+        <div class="intro-content">
+          <p class="intro-text">
+            {{ t('home.companyIntro.description') }}
+          </p>
+        </div>
+
+        <!-- 企业信息统计 -->
+        <div class="stats-showcase" ref="statsRef">
+          <div class="stat-item" v-for="(stat, index) in companyStats" :key="stat.labelKey">
+            <div class="stat-number-wrapper">
+              <span class="stat-number">{{ animatedValues[index] }}</span>
+              <span class="stat-unit">{{ stat.unit }}</span>
+            </div>
+            <div class="stat-label">{{ t(stat.labelKey) }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products -->
+    <section class="products-section">
+      <div class="container">
+        <h2 class="section-title">{{ t('home.products.title') }}</h2>
+
+        <div class="products-grid">
+          <div class="product-card card" v-for="product in products" :key="product.nameKey">
+            <div class="product-image">
+              <img :src="product.image" :alt="t(product.nameKey)" loading="lazy" />
+            </div>
+            <h3>{{ t(product.nameKey) }}</h3>
+            <p>{{ t(product.descKey) }}</p>
+          </div>
+        </div>
+        
+        <div class="products-action">
+          <router-link :to="localePath('/products')" class="industrial-button">{{ t('home.products.viewAll') }}</router-link>
+        </div>
+      </div>
+    </section>
+
+    <!-- 事业部展示 -->
+    <section class="divisions-section">
+      <div class="container">
+        <h2 class="section-title">{{ t('home.divisions.title') }}</h2>
+        <div class="divisions-showcase">
+          <div 
+            v-for="(division, index) in divisions" 
+            :key="division.nameKey"
+            class="division-item"
+            :class="{ 'reverse': index % 2 === 1 }"
+          >
+            <div class="division-image">
+              <img :src="division.image" :alt="t(division.nameKey)" loading="lazy" />
+            </div>
+            <div class="division-content">
+              <h3 class="division-name">{{ t(division.nameKey) }}</h3>
+              <p class="division-desc">{{ t(division.descKey) }}</p>
+              <div class="division-contact">
+                <div class="contact-item">
+                  <svg class="contact-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                  </svg>
+                  <span>{{ t(division.phoneKey) }}</span>
+                </div>
+                <div class="contact-item">
+                  <svg class="contact-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                  </svg>
+                  <span>{{ t(division.emailKey) }}</span>
+                </div>
+                <div class="contact-item">
+                  <svg class="contact-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                  </svg>
+                  <span>{{ t(division.addressKey) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Research Section -->
+    <section class="research-section">
+      <div class="container">
+        <h2 class="section-title">{{ t('home.research.title') }}</h2>
+        <p class="research-intro">
+          {{ t('home.research.intro') }}
+        </p>
+        
+        <div class="research-grid">
+          <div class="research-card" v-for="item in researchItems" :key="item.titleKey">
+            <div class="research-image">
+              <img :src="item.image" :alt="t(item.titleKey)" loading="lazy" />
+            </div>
+            <div class="research-info">
+              <h3>{{ t(item.titleKey) }}</h3>
+              <p>{{ t(item.descKey) }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- News Section -->
+    <section class="news-section">
+      <div class="container">
+        <h2 class="section-title">{{ t('home.news.title') }}</h2>
+        <div class="news-grid">
+          <div class="news-card" v-for="news in newsList" :key="news.id">
+            <div class="news-image">
+              <img :src="news.image" :alt="news.title" loading="lazy" />
+            </div>
+            <div class="news-info">
+              <h3>{{ news.title }}</h3>
+              <p>{{ news.summary }}</p>
+              <span class="news-date">{{ news.date }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="news-action">
+          <router-link :to="localePath('/news')" class="industrial-button">{{ t('home.news.viewAll') }}</router-link>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted, onUnmounted, reactive } from 'vue'
+import { useLocale } from '@/composables/useLocale'
+
+// 引入图片
+import heroBanner from '@/assets/images/banners/new_factory.png'
+import researchConcept from '@/assets/images/banners/research-concept.jpg'
+import researchPractice from '@/assets/images/banners/research-practice.jpg'
+import researchResource from '@/assets/images/banners/research-resource.jpg'
+import precisionMachine from '@/assets/images/products/precision-machine.png'
+import screwCompressor from '@/assets/images/products/screw-compressor.jpg'
+import industrialWrench from '@/assets/images/products/industrial-wrench.jpg'
+import autoRepairTools from '@/assets/images/products/auto-repair-tools.png'
+import news1 from '@/assets/images/news/news1.jpg'
+import news2 from '@/assets/images/news/news2.jpg'
+import news3 from '@/assets/images/news/news3.jpg'
+// 事业部图片
+import tighteningToolsDivision from '@/assets/images/facilities/tightening-tools-division.jpg'
+import compressorHostDivision from '@/assets/images/facilities/compressor-host-division.jpg'
+import precisionCompressorDivision from '@/assets/images/facilities/precision-compressor-division.jpg'
+
+const { t, localePath } = useLocale()
+
+const heroBannerUrl = ref(heroBanner)
+
+// 企业统计数据 - 包含数字值和单位分离
+const companyStats = [
+  { numericValue: 2000, unit: '年', labelKey: 'home.stats.foundedIn', static: true }, // 年份不需要动画
+  { numericValue: 6088, unit: '万', labelKey: 'home.stats.registeredCapital' },
+  { numericValue: 1000, unit: '+', labelKey: 'home.stats.employees' },
+  { numericValue: 3000, unit: '+', labelKey: 'home.stats.cncEquipment' },
+  { numericValue: 120, unit: '+', labelKey: 'home.stats.patents' },
+  { numericValue: 30, unit: '万', labelKey: 'home.stats.compressorHosts' },
+  { numericValue: 100, unit: '万', labelKey: 'home.stats.pneumaticTools' }
+]
+
+// 动画相关
+const statsRef = ref(null)
+// 静态数字直接显示最终值，其他初始化为 0
+const animatedValues = reactive(companyStats.map(stat => stat.static ? stat.numericValue : 0))
+let hasAnimated = false
+let observer = null
+
+// 数字递增动画函数
+const animateNumber = (index, targetValue, duration = 2000) => {
+  const startTime = performance.now()
+  const startValue = 0
+  
+  const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4)
+  
+  const updateNumber = (currentTime) => {
+    const elapsed = currentTime - startTime
+    const progress = Math.min(elapsed / duration, 1)
+    const easedProgress = easeOutQuart(progress)
+    
+    animatedValues[index] = Math.floor(startValue + (targetValue - startValue) * easedProgress)
+    
+    if (progress < 1) {
+      requestAnimationFrame(updateNumber)
+    } else {
+      animatedValues[index] = targetValue
+    }
+  }
+  
+  requestAnimationFrame(updateNumber)
+}
+
+// 启动所有数字动画
+const startCountAnimation = () => {
+  if (hasAnimated) return
+  hasAnimated = true
+  
+  companyStats.forEach((stat, index) => {
+    // 跳过静态数字（如年份）
+    if (stat.static) return
+    
+    // 添加延迟让动画有层次感
+    setTimeout(() => {
+      animateNumber(index, stat.numericValue, 2000)
+    }, index * 100)
+  })
+}
+
+// Intersection Observer 回调
+const handleIntersection = (entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      startCountAnimation()
+    }
+  })
+}
+
+onMounted(() => {
+  // 创建 Intersection Observer
+  observer = new IntersectionObserver(handleIntersection, {
+    threshold: 0.3,
+    rootMargin: '0px'
+  })
+  
+  if (statsRef.value) {
+    observer.observe(statsRef.value)
+  }
+})
+
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect()
+  }
+})
+
+// 事业部数据
+const divisions = [
+  {
+    nameKey: 'home.divisions.tighteningTools.name',
+    descKey: 'home.divisions.tighteningTools.desc',
+    phoneKey: 'home.divisions.tighteningTools.phone',
+    emailKey: 'home.divisions.tighteningTools.email',
+    addressKey: 'home.divisions.tighteningTools.address',
+    image: tighteningToolsDivision
+  },
+  {
+    nameKey: 'home.divisions.compressorHost.name',
+    descKey: 'home.divisions.compressorHost.desc',
+    phoneKey: 'home.divisions.compressorHost.phone',
+    emailKey: 'home.divisions.compressorHost.email',
+    addressKey: 'home.divisions.compressorHost.address',
+    image: compressorHostDivision
+  },
+  {
+    nameKey: 'home.divisions.precisionCompressor.name',
+    descKey: 'home.divisions.precisionCompressor.desc',
+    phoneKey: 'home.divisions.precisionCompressor.phone',
+    emailKey: 'home.divisions.precisionCompressor.email',
+    addressKey: 'home.divisions.precisionCompressor.address',
+    image: precisionCompressorDivision
+  }
+]
+
+const researchItems = [
+  { 
+    titleKey: 'home.research.concept', 
+    descKey: 'home.research.conceptDesc',
+    image: researchConcept
+  },
+  { 
+    titleKey: 'home.research.practice', 
+    descKey: 'home.research.practiceDesc',
+    image: researchPractice
+  },
+  { 
+    titleKey: 'home.research.resource', 
+    descKey: 'home.research.resourceDesc',
+    image: researchResource
+  }
+]
+
+const products = [
+  { nameKey: 'home.products.precisionMachine', descKey: 'home.products.precisionMachineDesc', image: precisionMachine },
+  { nameKey: 'home.products.screwCompressor', descKey: 'home.products.screwCompressorDesc', image: screwCompressor },
+  { nameKey: 'home.products.industrialWrench', descKey: 'home.products.industrialWrenchDesc', image: industrialWrench },
+  { nameKey: 'home.products.autoRepairTools', descKey: 'home.products.autoRepairToolsDesc', image: autoRepairTools }
+]
+
+const newsList = [
+  { 
+    id: 1, 
+    title: '2019年上海国际工业装配与传输技术展览会', 
+    summary: '2019年上海国际工业装配与传输技术展览会，将于2019年7月...',
+    date: '2020-04-11',
+    image: news1
+  },
+  { 
+    id: 2, 
+    title: '泰田集团喜获"浙江名牌产品"称号', 
+    summary: '"浙江名牌"荣誉是经区、市级质量监督管理部门严格审核通过...',
+    date: '2018-10-29',
+    image: news2
+  },
+  { 
+    id: 3, 
+    title: '《冲击式气扳机》"浙江制造"团体标准评审会在我司召开', 
+    summary: '"浙江制造"是浙江省启动的将"浙江制造"打造成为具有严格认证...',
+    date: '2020-04-11',
+    image: news3
+  }
+]
+
+const onHeroLoad = () => {
+  console.log('Hero image loaded')
+}
+</script>
+
+<style lang="scss" scoped>
+.hero {
+  height: 50vh;
+  min-height: 400px;
+  max-height: 500px;
+  position: relative;
+  color: white;
+  overflow: hidden;
+
+  .hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 0;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
+    z-index: 1;
+  }
+
+  .hero-container {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-content {
+    text-align: left;
+    max-width: 600px;
+    padding: 40px 0;
+  }
+
+  .hero-title {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.2;
+    letter-spacing: 2px;
+  }
+
+  .hero-subtitle {
+    font-size: 18px;
+    margin-bottom: 32px;
+    opacity: 0.95;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+  
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+  
+  .industrial-button {
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .hero-phone-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    
+    .phone-icon {
+      width: 18px;
+      height: 18px;
+    }
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: white;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+.company-intro {
+  padding: 50px 0 40px;
+  background: white;
+
+  .intro-content {
+    max-width: 1000px;
+    margin: 0 auto 30px;
+  }
+
+  .intro-text {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #666;
+    text-align: center;
+  }
+}
+
+// 企业信息统计展示区
+.stats-showcase {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 50px 60px;
+  margin: 30px 0 0;
+  background: linear-gradient(
+    180deg,
+    #f8f9fa 0%,
+    #f2f4f6 50%,
+    #eef0f2 100%
+  );
+  background-image: 
+    linear-gradient(180deg, #f8f9fa 0%, #f2f4f6 50%, #eef0f2 100%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e0e3e6' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+  
+  // 右下角装饰性背景
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent 30%, rgba(0, 0, 0, 0.02) 100%);
+    pointer-events: none;
+  }
+  
+  .stat-item {
+    flex: 1;
+    text-align: center;
+    padding: 20px 10px;
+    position: relative;
+    z-index: 1;
+    
+    // 分隔线效果
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(0, 0, 0, 0.08) 50%,
+        transparent 100%
+      );
+    }
+  }
+  
+  .stat-number-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    margin-bottom: 12px;
+    line-height: 1;
+  }
+  
+  .stat-number {
+    font-size: 42px;
+    font-weight: 700;
+    color: #1a1a1a;
+    font-family: 'DIN Alternate', 'Oswald', 'Bebas Neue', 'Arial Black', sans-serif;
+    letter-spacing: -1px;
+  }
+  
+  .stat-unit {
+    font-size: 20px;
+    font-weight: 400;
+    color: #333;
+    margin-left: 4px;
+    margin-top: 6px;
+    font-family: inherit;
+  }
+  
+  .stat-label {
+    font-size: 15px;
+    color: #555;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .stats-showcase {
+    padding: 60px 30px;
+    flex-wrap: wrap;
+    gap: 30px;
+    
+    .stat-item {
+      flex: 0 0 calc(25% - 22.5px);
+      
+      &::after {
+        display: none;
+      }
+    }
+    
+    .stat-number {
+      font-size: 36px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-showcase {
+    padding: 50px 20px;
+    gap: 25px;
+    
+    .stat-item {
+      flex: 0 0 calc(50% - 12.5px);
+    }
+    
+    .stat-number {
+      font-size: 28px;
+    }
+    
+    .stat-unit {
+      font-size: 14px;
+    }
+    
+    .stat-label {
+      font-size: 13px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-showcase {
+    .stat-item {
+      flex: 0 0 100%;
+    }
+  }
+}
+
+// 事业部展示区
+.divisions-section {
+  padding: 60px 0;
+  background: #f8f9fa;
+}
+
+.divisions-showcase {
+  margin-top: 0;
+  
+  .division-item {
+    display: flex;
+    align-items: stretch;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    min-height: 280px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    &.reverse {
+      flex-direction: row-reverse;
+    }
+  }
+  
+  .division-image {
+    flex: 0 0 55%;
+    max-width: 55%;
+    position: relative;
+    overflow: hidden;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+  }
+  
+  .division-item:hover .division-image img {
+    transform: scale(1.03);
+  }
+  
+  .division-content {
+      flex: 1;
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: left;
+      position: relative;
+      background: #ffffff;
+    }
+  
+  .division-name {
+    font-size: 20px;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    text-align: left;
+  }
+  
+  .division-desc {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #666;
+    margin: 0 0 16px 0;
+    text-align: justify;
+  }
+  
+  .division-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+    
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #555;
+      text-align: left;
+      
+      .contact-icon {
+        width: 16px;
+        height: 16px;
+        color: #000000;
+        flex-shrink: 0;
+      }
+      
+      span {
+        line-height: 1.4;
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .divisions-showcase {
+    .division-item {
+      min-height: 240px;
+    }
+    
+    .division-image {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+    
+    .division-content {
+      padding: 20px 24px;
+    }
+    
+    .division-name {
+      font-size: 18px;
+    }
+    
+    .division-desc {
+      font-size: 13px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .divisions-section {
+    padding: 40px 0;
+  }
+  
+  .divisions-showcase {
+    .division-item {
+      flex-direction: column !important;
+      min-height: auto;
+    }
+    
+    .division-image {
+      flex: none;
+      max-width: 100%;
+      height: 200px;
+    }
+    
+    .division-content {
+      text-align: left !important;
+      padding: 24px 20px !important;
+      
+      &::before {
+        display: none;
+      }
+    }
+    
+    .division-name {
+      text-align: left;
+    }
+    
+    .division-desc {
+      text-align: justify;
+    }
+    
+    .division-contact {
+      .contact-item {
+        text-align: left;
+      }
+    }
+  }
+}
+
+.research-section {
+  padding: 80px 0;
+  background: linear-gradient(180deg, #f8f9fa 0%, #fff 100%);
+  
+  .research-intro {
+    max-width: 900px;
+    margin: 0 auto 50px;
+    text-align: center;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #666;
+  }
+  
+  .research-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+  
+  .research-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s;
+    
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    .research-image {
+      height: 200px;
+      overflow: hidden;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s;
+      }
+    }
+    
+    &:hover .research-image img {
+      transform: scale(1.05);
+    }
+    
+    .research-info {
+      padding: 25px;
+      text-align: center;
+      
+      h3 {
+        font-size: 20px;
+        color: #000000;
+        margin-bottom: 10px;
+      }
+      
+      p {
+        font-size: 14px;
+        color: #666;
+      }
+    }
+  }
+}
+
+.products-section {
+  padding: 80px 0;
+  background: #f8f9fa;
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+  }
+
+  .product-card {
+    padding: 30px;
+    text-align: center;
+    background: white;
+
+    .product-image {
+      width: 100%;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      overflow: hidden;
+      
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: transform 0.3s;
+      }
+    }
+    
+    &:hover .product-image img {
+      transform: scale(1.08);
+    }
+
+    h3 {
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 12px;
+    }
+
+    p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+    }
+  }
+  
+  .products-action {
+    text-align: center;
+    margin-top: 50px;
+    
+    .industrial-button {
+      text-decoration: none;
+    }
+  }
+}
+
+.news-section {
+  padding: 80px 0;
+  background: white;
+  
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+  }
+  
+  .news-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s;
+    
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .news-image {
+      height: 180px;
+      overflow: hidden;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s;
+      }
+    }
+    
+    &:hover .news-image img {
+      transform: scale(1.05);
+    }
+    
+    .news-info {
+      padding: 20px;
+      
+      h3 {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 10px;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      
+      p {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 10px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      
+      .news-date {
+        font-size: 12px;
+        color: #999;
+      }
+    }
+  }
+  
+  .news-action {
+    text-align: center;
+    margin-top: 50px;
+    
+    .industrial-button {
+      text-decoration: none;
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .research-section .research-grid,
+  .news-section .news-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    height: 45vh;
+    min-height: 320px;
+
+    .hero-content {
+      padding: 30px 0;
+    }
+
+    .hero-title {
+      font-size: 28px;
+      letter-spacing: 1px;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    
+    .hero-buttons {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    
+    .hero-phone-btn {
+      padding: 10px 18px;
+      font-size: 14px;
+    }
+  }
+  
+  .research-section .research-grid,
+  .news-section .news-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .products-section .products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-section .phone-number {
+    font-size: 32px;
+  }
+}
+</style>
